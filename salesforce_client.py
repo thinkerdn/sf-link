@@ -64,7 +64,8 @@ class SalesforceClient:
             print("- SOAP APIが無効な場合は、OAuth 2.0認証を使用してください")
             print("- Connected Appを作成し、Consumer KeyとSecretを.envに設定してください")
             print("- 詳細はREADME.mdの「OAuth 2.0認証の設定」セクションを参照してください")
-            return False
+            # 接続失敗時は例外を発生させる
+            raise ConnectionError(f"Salesforceへの接続に失敗しました: {e}")
     
     def _get_oauth_token(self):
         """OAuth 2.0トークンを取得"""
@@ -99,6 +100,9 @@ class SalesforceClient:
         Returns:
             dict: クエリ結果
         """
+        if self.sf is None:
+            raise ConnectionError("Salesforceに接続されていません。接続を確認してください。")
+        
         try:
             result = self.sf.query(soql)
             print(f"✓ クエリ実行成功: {result['totalSize']}件のレコードを取得")
@@ -117,6 +121,9 @@ class SalesforceClient:
         Returns:
             dict: クエリ結果（全レコード）
         """
+        if self.sf is None:
+            raise ConnectionError("Salesforceに接続されていません。接続を確認してください。")
+        
         try:
             result = self.sf.query_all(soql)
             print(f"✓ クエリ実行成功: {result['totalSize']}件のレコードを取得")
@@ -135,6 +142,9 @@ class SalesforceClient:
         Returns:
             dict: オブジェクトのメタデータ
         """
+        if self.sf is None:
+            raise ConnectionError("Salesforceに接続されていません。接続を確認してください。")
+        
         try:
             metadata = getattr(self.sf, object_name).describe()
             print(f"✓ {object_name}のメタデータ取得成功")

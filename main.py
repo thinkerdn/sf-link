@@ -167,8 +167,14 @@ def main():
         print(f"\n設定エラー: {e}")
         print("\n.envファイルを作成し、Salesforceの認証情報を設定してください。")
         print("詳細はREADME.mdを参照してください。")
+    except ConnectionError as e:
+        print(f"\n接続エラー: {e}")
+        print("\nSalesforceへの接続に失敗しました。")
+        print("認証情報を確認してください。")
     except Exception as e:
         print(f"\nエラーが発生しました: {e}")
+        import traceback
+        traceback.print_exc()
 
 
 if __name__ == "__main__":
