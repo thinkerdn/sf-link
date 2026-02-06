@@ -232,6 +232,70 @@ INVALID_OPERATION: SOAP API login() is disabled by default in this org.
 
 → 上記「方法B: OAuth 2.0認証」の手順に従ってConnected Appを作成し、Consumer KeyとSecretを設定してください。
 
+### OAuth認証エラー（invalid_client_id）が発生する場合
+
+```
+OAuth認証失敗: {"error":"invalid_client_id","error_description":"client identifier invalid"}
+```
+
+このエラーは、Consumer Key（Client ID）が無効または正しくないことを示しています。
+
+#### 原因と解決方法
+
+**1. Consumer Keyのコピーミス**
+- Consumer Keyに余分なスペースや改行が含まれていないか確認
+- Consumer Keyを再度コピー＆ペーストして確認
+
+**2. 環境の不一致（本番 vs サンドボックス）**
+
+Connected Appを作成した環境と、`.env`の`SF_DOMAIN`設定が一致している必要があります。
+
+**本番環境でConnected Appを作成した場合:**
+```env
+SF_DOMAIN=login
+```
+
+**サンドボックス環境でConnected Appを作成した場合:**
+```env
+SF_DOMAIN=test
+```
+
+**確認方法:**
+- ユーザー名に`.sandbox`や特殊なドメインが含まれている場合はサンドボックス
+- Connected Appを作成したSalesforce環境のURLを確認
+  - `https://login.salesforce.com` → 本番環境
+  - `https://test.salesforce.com` または `https://[instance].sandbox.my.salesforce.com` → サンドボックス
+
+**3. Connected Appが承認されていない**
+
+Connected App作成直後は、使用できるまで数分かかる場合があります。
+
+**解決方法:**
+1. 5-10分待ってから再試行
+2. Connected Appの設定を確認：
+   - **設定** → **アプリケーション** → **接続アプリケーション**
+   - 該当のアプリを選択
+   - **状態**が「有効」になっているか確認
+
+**4. Consumer KeyとSecretの再取得**
+
+Consumer KeyまたはSecretが正しくない可能性があります。
+
+**手順:**
+1. **設定** → **アプリケーション** → **アプリケーションマネージャ**
+2. 該当のConnected Appの右側の▼をクリック → **参照**
+3. **API (OAuth 設定の有効化)** セクションで**コンシューマ鍵を管理**をクリック
+4. Consumer KeyとConsumer Secretを再度コピー
+5. `.env`ファイルを更新
+
+**5. 正しいConnected Appを使用しているか確認**
+
+複数のConnected Appがある場合、間違ったものを使用している可能性があります。
+
+**確認方法:**
+- Connected Appの名前を確認
+- 最近作成したものを使用しているか確認
+
 ### OAuth認証エラー（invalid_grant）が発生する場合
 
 ```
