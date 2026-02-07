@@ -22,6 +22,14 @@ class SalesforceClient:
         self.domain = os.getenv('SF_DOMAIN', 'login')
         self.consumer_key = os.getenv('SF_CONSUMER_KEY')
         self.consumer_secret = os.getenv('SF_CONSUMER_SECRET')
+
+        print(f"SF_USERNAME: {self.username}")
+        print(f"SF_PASSWORD: {self.password}")
+        print(f"SF_SECURITY_TOKEN: {self.security_token}")
+        print(f"SF_DOMAIN: {self.domain}")
+        print(f"SF_CONSUMER_KEY: {self.consumer_key}")
+        print(f"SF_CONSUMER_SECRET: {self.consumer_secret}")
+        print("=" * 60)
         
         # OAuth認証を使用する場合
         if self.consumer_key and self.consumer_secret:
